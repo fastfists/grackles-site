@@ -1,6 +1,5 @@
 const hre = require("hardhat");
 
-
 base_uri = "ipfs://QmWh7jVBZ4UiNq7fZvuTSq6rnUcTYk5EDKYRcN5Eg7PQor/"
 images_to_uri = [
     "Airpod Grackle.jpg",
@@ -46,9 +45,9 @@ images_to_uri = [
 ]
 
 async function main() {
-    const NFT = await ethers.getContractFactory("GrabbyGrackles");
-    const WALLET_ADDRESS = "0x63B060a3E5a89308DB2Da5D16429AB01A65e29D8"
-    const CONTRACT_ADDRESS = "0x1Ebc8756d71735A122F622ADf589E46E9cdffcd9"
+    const NFT = await hre.ethers.getContractFactory("GrabbyGrackles");
+    const WALLET_ADDRESS = "0x4aA35719EA06fEab07a349D9Cf93ebe0Ca77BaBd"
+    const CONTRACT_ADDRESS = "0x211A99316aD15181dCFD47a45f9f2fD6601AD258"
     const contract = NFT.attach(CONTRACT_ADDRESS);
     for (let i = 0; i < images_to_uri.length; i++) {
         await contract.mint(WALLET_ADDRESS, base_uri+images_to_uri[i]["uri"]);

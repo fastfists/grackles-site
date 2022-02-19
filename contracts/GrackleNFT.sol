@@ -31,13 +31,15 @@ contract GrabbyGrackles is ERC721, Ownable {
   }
 
   function mint(address recipient, string memory uri)
-    public
+    public onlyOwner
     returns (uint256)
   {
     _tokenIds.increment();
+
     uint256 newItemId = _tokenIds.current();
     _mint(recipient, newItemId);
     _setTokenURI(newItemId, uri);
+    
     return newItemId;
   }
 

@@ -20,15 +20,23 @@
         <img
           style="display: flex; margin: 0 auto; margin-top: 3%; height: 200px; cursor: pointer;"
           src="/brush/buy.png"
+          v-on:click="counter += 1"
         />
+        <div>
+          <p>{{counter}} : cliked</p>
+        </div>
         <!-- <v-btn
           color="black"
           style="display: flex; margin: 0 auto; font-weight: 400; margin-top: 3%; height: 20%; color: white;"
+          src="/brush/buy.png"
         >
-          Buy Now</v-btn
+          Buy Now
+          </v-btn
         > -->
       </v-col>
     </v-row>
+
+
     <div class="gallery" style="margin-top: 0">
       <div class="gallery-panel" v-for="photo in photos" :key="photo.id">
         <img :src="photo.filename" />
@@ -38,66 +46,180 @@
   </v-container>
 </template>
 
+
+
+
 <script>
 import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
 
+
+
 export default {
-  components: { VueperSlides, VueperSlide },
+  components: { VueperSlides, VueperSlide},
   data() {
     return {
+      counter: 0,
       photos: [
         {
           id: "crypto",
-          filename: "/collections/grabby/SecretService.jpg"
+          filename: "/collections/grabby/Airpod Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/SherlockGrackle.jpg"
+          filename: "/collections/grabby/Angry hippie Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/TorchyGrackle.jpg"
+          filename: "/collections/grabby/Art critic Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Viking.jpg"
+          filename: "/collections/grabby/Artsy Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Crypto2.jpg"
+          filename: "/collections/grabby/Banksy Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Cryptograckle.jpg"
+          filename: "/collections/grabby/Blue origin grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/HippieGrackle.jpg"
+          filename: "/collections/grabby/British Judge.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Invisible.jpg"
+          filename: "/collections/grabby/Cryptopunk Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Jack.jpg"
+          filename: "/collections/grabby/Drunk artist grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/JoeGrackle.jpg"
+          filename: "/collections/grabby/Duty free Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Matt.jpg"
+          filename: "/collections/grabby/Evening Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Oktoberfest.jpg"
+          filename: "/collections/grabby/German Grackle.jpg"
         },
         {
           id: "crypto",
-          filename: "/collections/grabby/Pirate.jpg"
+          filename: "/collections/grabby/Green hat.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Habanero Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Hairdresser bird.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Invisible Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Joe Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Longhorns Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/modern grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Oktoberfest Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Peacock Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Questioning Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Secret Service Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Shaky Crypto Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Sheriff Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Sherlock Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Singing Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Tax free Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/The cat.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/The pirate.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/The puppy Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/The rebel Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/The sneeze Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Too many drinks Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Torchy Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Turks cap.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Twitter Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Ukrainian Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/Viking Grackle.jpg"
+        },
+        {
+          id: "crypto",
+          filename: "/collections/grabby/VR Grackle.jpg"
         }
       ]
     };
