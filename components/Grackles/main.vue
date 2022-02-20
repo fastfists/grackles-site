@@ -17,10 +17,10 @@
         >
           Fun and wacky grackles that bring Austin flair to the NFT world.
         </div>
-        <img
+        <!-- <img
           style="display: flex; margin: 0 auto; margin-top: 3%; height: 200px; cursor: pointer;"
           src="/brush/buy.png"
-        />
+        /> -->
         <div>
         </div>
         <!-- <v-btn

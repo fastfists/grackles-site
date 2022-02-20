@@ -48,9 +48,10 @@
       <v-icon>mdi-discord</v-icon>
     </v-btn>
     <v-btn elevation="2"
+      @click="clickedLogo"
       >Sign In
       <img
-        @click="clickedLogo"
+        
         style="height: 20px; margin-left: 10px"
         alt="Metamask Logo"
         src="/metamask.png"
