@@ -20,10 +20,8 @@
         <img
           style="display: flex; margin: 0 auto; margin-top: 3%; height: 200px; cursor: pointer;"
           src="/brush/buy.png"
-          v-on:click="counter += 1"
         />
         <div>
-          <p>{{counter}} : cliked</p>
         </div>
         <!-- <v-btn
           color="black"
@@ -38,8 +36,21 @@
 
 
     <div class="gallery" style="margin-top: 0">
-      <div class="gallery-panel" v-for="photo in photos" :key="photo.id">
-        <img :src="photo.filename" />
+      <div class="gallery-panel" v-for="(photo, index) in photos" :key="photo.id">
+
+        <v-dialog
+             v-model="dialog[index]"
+             width="300"
+          >
+             <template v-slot:activator="{on}">
+                <img
+                  style="cursor: pointer;"
+                  v-on="on"
+                  :src="photo.filename" />
+             </template>
+             <GracklesSingle :id="index" :file_name="photo.filename" cost="0.521"/>
+          </v-dialog>
+
       </div>
     </div>
     <GracklesFaq />
@@ -59,7 +70,7 @@ export default {
   components: { VueperSlides, VueperSlide},
   data() {
     return {
-      counter: 0,
+      dialog: [],
       photos: [
         {
           id: "crypto",
