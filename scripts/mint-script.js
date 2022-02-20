@@ -50,7 +50,7 @@ async function main() {
     const CONTRACT_ADDRESS = "0x211A99316aD15181dCFD47a45f9f2fD6601AD258"
     const contract = NFT.attach(CONTRACT_ADDRESS);
     for (let i = 0; i < images_to_uri.length; i++) {
-        await contract.mint(WALLET_ADDRESS, base_uri+images_to_uri[i]["uri"]);
+        await contract.mint(WALLET_ADDRESS, base_uri+images_to_uri[i]);
     }
     console.log("NFT minted:", contract);
 }
