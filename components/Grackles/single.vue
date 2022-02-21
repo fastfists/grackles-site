@@ -13,6 +13,7 @@
           <div style="flex: 1 0 auto"/>
           <v-btn
           class="m-0"
+          v-on:click.native="buy"
             >
             Buy this nft
           </v-btn>
@@ -47,7 +48,7 @@ export default {
     async fetch() {
         await window.ethereum.enable()
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const CONTRACT_ADDRESS = "0x211A99316aD15181dCFD47a45f9f2fD6601AD258";
+        const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(CONTRACT_ADDRESS, GrabbyGrackles.abi, signer);
@@ -59,6 +60,10 @@ export default {
         /* this.owner = "oh oh"; */
         /* this.uri   = "hi hi"; */
 
+    },
+
+    buy() {
+      alert("Do you want to buy?");
     }
 };
 </script>

@@ -1,3 +1,4 @@
+// // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -9,6 +10,10 @@ contract GrabbyGrackles is ERC721, Ownable {
   using Strings for uint256;
   Counters.Counter private _tokenIds;
   mapping (uint256 => string) private _tokenURIs;
+
+  // mapping saves the NFT prices set by tokenId in wei
+  mapping (uint256 => uint256) private prices;
+
   
   constructor() ERC721("GrabbyGrackles", "GGNFT") {}
 
@@ -41,6 +46,27 @@ contract GrabbyGrackles is ERC721, Ownable {
     _setTokenURI(newItemId, uri);
     
     return newItemId;
+  }
+
+  function setPrice(uint256 tokenId, uint256 price) public {
+    address owner = ownerOf(tokenId);
+    require(owner == msg.sender, "You are not the owner of this NFT, you can't set the price");
+
+    prices[tokenId] = price;
+  }
+
+  function getPrice(uint256 tokenId) public view returns(uint256) {
+    return prices[tokenId];
+  }
+
+  function buyNFT(uint256 tokenId) public payable{
+    require(ownerOf(tokenId) == 0x4aA35719EA06fEab07a349D9Cf93ebe0Ca77BaBd, "This NFT has been bought already, please choose others to buy");
+    require(balanceOf(msg.sender) >= prices[tokenId], "Insufficient balance");
+
+    address seller = ownerOf(tokenId);
+    _transfer(seller, msg.sender, tokenId);
+    payable(seller).transfer(msg.value);
+
   }
 
 }
