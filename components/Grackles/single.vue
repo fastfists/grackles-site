@@ -13,8 +13,7 @@
           <div style="flex: 1 0 auto"/>
           <v-btn
           class="m-0"
-          v-on:click.native="buy"
-            >
+          @click="buy">
             Buy this nft
           </v-btn>
         </div>
@@ -43,6 +42,8 @@ export default {
         owner: "",
         uri: "",
         nft_name: nft_name,
+        contract: null,
+        signer: null,
       };
     },
     async fetch() {
@@ -56,14 +57,18 @@ export default {
         console.log("id " + this.id)
         this.owner = await contract.ownerOf(this.id + 1);
         this.uri = await contract.tokenURI(this.id + 1)
+        this.contract = contract;
+        this.signer = signer;
 
         /* this.owner = "oh oh"; */
         /* this.uri   = "hi hi"; */
 
     },
-
-    buy() {
-      alert("Do you want to buy?");
+    methods: {
+        async buy() {
+          alert("Do you want to buy?");
+          await contract.buyNFT(await this.signer.getAddress(), this.id + 1);
+        }
     }
 };
 </script>

@@ -1,6 +1,7 @@
 const hre = require("hardhat");
 
 base_uri = "ipfs://QmWh7jVBZ4UiNq7fZvuTSq6rnUcTYk5EDKYRcN5Eg7PQor/"
+const price = "5"
 images_to_uri = [
     "Airpod Grackle.jpg",
     "Angry hippie Grackle.jpg",
@@ -49,7 +50,7 @@ async function main() {
     const WALLET_ADDRESS = "0x4aA35719EA06fEab07a349D9Cf93ebe0Ca77BaBd"
     const contract = NFT.attach(process.env.CONTRACT_ADDRESS);
     for (let i = 0; i < images_to_uri.length; i++) {
-        await contract.mint(WALLET_ADDRESS, base_uri+images_to_uri[i]);
+        await contract.mint(WALLET_ADDRESS, base_uri+images_to_uri[i], price);
     }
     console.log("NFT minted:", contract);
 }

@@ -32,10 +32,11 @@ contract GrabbyGrackles is ERC721, Ownable {
     returns (string memory)
   {
     require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-    string memory _tokenURI = _tokenURIs[tokenId];    return _tokenURI;
+    string memory _tokenURI = _tokenURIs[tokenId];
+    return _tokenURI;
   }
 
-  function mint(address recipient, string memory uri)
+  function mint(address recipient, string memory uri, uint256 price)
     public onlyOwner
     returns (uint256)
   {
@@ -44,6 +45,7 @@ contract GrabbyGrackles is ERC721, Ownable {
     uint256 newItemId = _tokenIds.current();
     _mint(recipient, newItemId);
     _setTokenURI(newItemId, uri);
+    prices[newItemId] = price;
     
     return newItemId;
   }
@@ -59,14 +61,13 @@ contract GrabbyGrackles is ERC721, Ownable {
     return prices[tokenId];
   }
 
-  function buyNFT(uint256 tokenId) public payable{
-    require(ownerOf(tokenId) == 0x4aA35719EA06fEab07a349D9Cf93ebe0Ca77BaBd, "This NFT has been bought already, please choose others to buy");
-    require(balanceOf(msg.sender) >= prices[tokenId], "Insufficient balance");
+  function buyNFT(address recipient, uint256 tokenId) public payable {
+    require(ownerOf(tokenId) != recipient, "You already own this NFT");
+    require(balanceOf(recipient) >= prices[tokenId], "Insufficient balance");
 
     address seller = ownerOf(tokenId);
-    _transfer(seller, msg.sender, tokenId);
+    _transfer(seller, recipient, tokenId);
     payable(seller).transfer(msg.value);
-
   }
 
 }
