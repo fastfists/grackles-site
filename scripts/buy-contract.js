@@ -2,7 +2,7 @@ const hre = require("hardhat");
 require("dotenv").config();
 
 async function main() {
-    let token_id = 2;
+    let token_id = 1;
     const NFT = await hre.ethers.getContractFactory("GrabbyGrackles");
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
     const contract = NFT.attach(CONTRACT_ADDRESS);
@@ -18,10 +18,11 @@ async function main() {
     console.log("Before Buy");
     console.log(await contract.ownerOf(token_id));
     console.log(await contract.getPrice(token_id));
-    console.log(await contract.setPrice(token_id, 5000)); // Should not get changed
+    await contract.setPrice(token_id, 5000); // Should not get changed
     console.log(await contract.getPrice(token_id));
 
-    // await contract.buyNFT(token_id);
+    var addr = "0x63B060a3E5a89308DB2Da5D16429AB01A65e29D8"
+    await contract.buyNFT(addr, token_id, {value: 5000});
 
     console.log("After Buy");
     console.log(await contract.getPrice(token_id));

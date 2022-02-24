@@ -1,7 +1,6 @@
 const hre = require("hardhat");
 
 base_uri = "ipfs://QmWh7jVBZ4UiNq7fZvuTSq6rnUcTYk5EDKYRcN5Eg7PQor/"
-const price = "5"
 images_to_uri = [
     "Airpod Grackle.jpg",
     "Angry hippie Grackle.jpg",
@@ -44,6 +43,8 @@ images_to_uri = [
     "Viking Grackle.jpg",
     "VR Grackle.jpg",
 ]
+
+const price = "50000000000000000" // 0.05 MATIC
 
 async function main() {
     const NFT = await hre.ethers.getContractFactory("GrabbyGrackles");

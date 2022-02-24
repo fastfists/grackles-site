@@ -13,13 +13,6 @@ async function main() {
         const uri = await contract.tokenURI(i);
         console.log("URI: ", uri);
     }
-
-    await contract.setPrice(1, 5000000000000000);
-
-    var price = await contract.getPrice(1);
-    price = price / Math.pow(10, 18);
-
-    console.log("The first token is worth " + price + " eth");
 }
 
 main().then(() => process.exit(0)).catch(error => {

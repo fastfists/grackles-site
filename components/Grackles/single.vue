@@ -9,7 +9,9 @@
         <div
           style="display: flex; flex-direction: column"
           >
-          <p> {{nft_name}} </p>
+          <p> {{nft_name}}</p>
+          <div style="flex: 1 0 auto"/>
+          <p> Cost {{price}} WEI</p>
           <div style="flex: 1 0 auto"/>
           <v-btn
           class="m-0"
@@ -32,15 +34,16 @@ export default {
     props: {
         id: Number,
         file_name: String,
-        cost: Number,
     },
     data() {
       let extension = path.extname(this.file_name);
       let nft_name = path.basename(this.file_name,extension);
       console.log(nft_name);
+      require("dotenv").config();
       return {
         owner: "",
         uri: "",
+        price: "...",
         nft_name: nft_name,
         contract: null,
         signer: null,
@@ -49,25 +52,28 @@ export default {
     async fetch() {
         await window.ethereum.enable()
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+        // TODO make dotenv work with this
+        const CONTRACT_ADDRESS = "0x0903cc60941A6AC0631836E220e0d74917c77ffe";
+        // const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(CONTRACT_ADDRESS, GrabbyGrackles.abi, signer);
-
-        console.log("id " + this.id)
-        this.owner = await contract.ownerOf(this.id + 1);
-        this.uri = await contract.tokenURI(this.id + 1)
+        /* this.owner = await contract.ownerOf(this.id + 1); */
+        /* this.uri = await contract.tokenURI(this.id + 1); */
+        this.price = await contract.getPrice(this.id + 1);
         this.contract = contract;
         this.signer = signer;
-
-        /* this.owner = "oh oh"; */
-        /* this.uri   = "hi hi"; */
-
     },
     methods: {
         async buy() {
-          alert("Do you want to buy?");
-          await contract.buyNFT(await this.signer.getAddress(), this.id + 1);
+          /* await window.ethereum.enable() */
+          console.log(this.signer.getAddress());
+          try {
+            await this.contract.buyNFT(await this.signer.getAddress(), this.id + 1, {value: this.price});
+          } catch(e) {
+            console.log(e.data.message);
+          }
+          alert("Buying the NFT stuffs");
         }
     }
 };

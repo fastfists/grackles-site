@@ -51,8 +51,7 @@ contract GrabbyGrackles is ERC721, Ownable {
   }
 
   function setPrice(uint256 tokenId, uint256 price) public {
-    address owner = ownerOf(tokenId);
-    require(owner == msg.sender, "You are not the owner of this NFT, you can't set the price");
+    require(ownerOf(tokenId) == msg.sender, "You are not the owner of this NFT, you can't set the price");
 
     prices[tokenId] = price;
   }
@@ -63,7 +62,7 @@ contract GrabbyGrackles is ERC721, Ownable {
 
   function buyNFT(address recipient, uint256 tokenId) public payable {
     require(ownerOf(tokenId) != recipient, "You already own this NFT");
-    require(balanceOf(recipient) >= prices[tokenId], "Insufficient balance");
+    require(msg.value >= prices[tokenId], "Insufficient balance");
 
     address seller = ownerOf(tokenId);
     _transfer(seller, recipient, tokenId);

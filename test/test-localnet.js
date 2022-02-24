@@ -10,9 +10,9 @@ describe("GrackleNFT", function () {
         const grabbyGrackles = await NFT.deploy();
         await grabbyGrackles.deployed();
 
-        const ogOwner = "0xbda5747bfd65f08deb54cb465eb87d40e51b197e"; // Get this user from localhost server
+        const ogOwner = "0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199"; // Get this user from localhost server
         const metadataURI = "cid/test.png";
-        const price = 0;
+        const price = ethers.utils.parseEther('0.000005');
 
         let balance = await grabbyGrackles.balanceOf(ogOwner);
         
@@ -23,7 +23,7 @@ describe("GrackleNFT", function () {
         let newBalance = await grabbyGrackles.balanceOf(ogOwner);
         expect(newBalance).to.equal(1);
 
-        const otherOwner = "0xa0ee7a142d267c1f36714e4a8f75612f20a79720"; // Get this user from localhost network
+        const otherOwner = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"; // Get this user from localhost network
 
         let p = await grabbyGrackles.getPrice(1);
         expect(p).to.equal(price);
