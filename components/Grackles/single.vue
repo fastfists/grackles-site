@@ -70,10 +70,16 @@ export default {
           console.log(this.signer.getAddress());
           try {
             await this.contract.buyNFT(await this.signer.getAddress(), this.id + 1, {value: this.price});
+            alert("YOU bought the NFT stuffs");
           } catch(e) {
-            console.log(e.data.message);
+            if (e.code === 4001){
+              alert("you reject the transaction")
+            
+            }
+            console.log(e.data);
+            
           }
-          alert("Buying the NFT stuffs");
+          
         }
     }
 };
