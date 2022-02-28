@@ -48,29 +48,73 @@
       <v-icon>mdi-discord</v-icon>
     </v-btn>
     <v-btn elevation="2"
-      @click="clickedLogo"
+      @click="connect"
+      v-if="address == ''"
       >Sign In
       <img
-        
         style="height: 20px; margin-left: 10px"
         alt="Metamask Logo"
         src="/metamask.png"
     /></v-btn>
+    <div v-else>
+        Connected {{address.slice(0, 5) + "..." + address.slice(-3)}}
+    </div>
   </v-app-bar>
 </template>
 
 <script>
+const handle = (promise) => {
+  return promise
+    .then(data => ([data, undefined]))
+    .catch(error => Promise.resolve([undefined, error]));
+}
+
 export default {
   data() {
     return {
+      address: "",
       collections: [{ title: "Grabby Grackles", url: "grabby-grackles" }]
     };
+  },
+  mounted() {
+    console.log("yo")
+    if (window.ethereum) {
+        this.getAccount().then(() => console.log("got eeem")).catch(e => console.log(e))
+        ethereum.on('accountsChanged', this.handleAccountsChanged);
+    }
   },
   methods: {
     openLink(link) {
       window.open(link, "_blank");
     },
-    clickedLogo() {}
+    handleAccountsChanged(accounts) {
+        console.log(accounts);
+        if (accounts.length === 0) {
+            this.address = ""
+        }
+        else if (typeof accounts === "string") {
+            this.address = accounts
+        } else {
+            this.address = accounts[0]
+        }
+    },
+    async getAccount() {
+        const [accounts, err] = await ethereum.request({ method: 'eth_accounts' });
+        if (err) {
+            console.log(err)
+        }
+        this.handleAccountsChanged(accounts);
+    },
+    async connect() {
+      let [address, err] = await handle(ethereum.request({ method: 'eth_requestAccounts' }))
+
+      if (err) {
+        if (err.code == 4001) alert("Rejection request denied, try again.");
+        console.log(err.data);
+        return;
+      }
+      this.address = address[0];
+    }
   }
 };
 </script>

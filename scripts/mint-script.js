@@ -1,14 +1,15 @@
 const hre = require("hardhat");
 
 base_uri = "ipfs://QmWh7jVBZ4UiNq7fZvuTSq6rnUcTYk5EDKYRcN5Eg7PQor/"
+// If you change the ORDER please reflect the change in the gracklesMain component
 images_to_uri = [
     "Airpod Grackle.jpg",
     "Angry hippie Grackle.jpg",
-    "Art critic Grackle.jpg",
-    "Artsy Grackle.jpg",
+    "Art critic Grackle.jpg", //
+    "Artsy Grackle.jpg", //
     "Banksy Grackle.jpg",
     "Blue origin grackle.jpg",
-    "British Judge.jpg",
+    "British Judge.jpg", //
     "Cryptopunk Grackle.jpg",
     "Drunk artist grackle.jpg",
     "Duty free Grackle.jpg",
@@ -37,8 +38,8 @@ images_to_uri = [
     "The sneeze Grackle.jpg",
     "Too many drinks Grackle.jpg",
     "Torchy Grackle.jpg",
-    "Turks cap.jpg",
-    "Twitter Grackle.jpg",
+    "Turks cap.jpg", //
+    "Twitter Grackle.jpg", //
     "Ukrainian Grackle.jpg",
     "Viking Grackle.jpg",
     "VR Grackle.jpg",
