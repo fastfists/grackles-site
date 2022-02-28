@@ -128,9 +128,7 @@ export default {
       console.log("HI")
     });
     contract.on("Transfer", (_from, _to, tokenID) => {
-        console.log("Caught transfer")
         if (_from.toLowerCase() === og_owner_addr) {
-            console.log("yo?")
             let id = tokenID - 1; // Convert from id to index
             this.photos[id]["taken"] = true;
             this.photos[id]["price"] = "Not available"
