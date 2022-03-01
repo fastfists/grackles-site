@@ -69,12 +69,26 @@
                     </div>
                 </div>
              </template>
-             <GracklesSingle :id="photo.id" :file_name="photo.filename" />
+             <GracklesSingle :connected="address !== ''" :id="photo.id" :file_name="photo.filename" :onBuy="() => {onPurchase(index); alertOn =true; dialog[index] = false}" />
           </v-dialog>
 
       </div>
     </div>
     <GracklesFaq />
+     <v-snackbar v-model="alertOn" >
+          <v-progress-circular indeterminate color="primary">
+          </v-progress-circular>
+          {{ alertMessage }}
+          <template v-slot:action="{ attrs }">
+            <v-btn
+              text
+              v-bind="attrs"
+              @click="alertOn = false"
+            >
+                Dismiss
+            </v-btn>
+          </template>
+        </v-snackbar>
   </v-container>
 </template>
 
@@ -99,11 +113,25 @@ const handle = (promise) => {
 
 export default {
   methods: {
+  onPurchase(index) {
+      this.alertMessage = "Validating transaction";
+      this.alertIndex = index;
+  },
   async handleConnect() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const CONTRACT_ADDRESS = "0x0903cc60941A6AC0631836E220e0d74917c77ffe";
+    this.connected = true
+    // TODO update on change
+    const CONTRACT_ADDRESS = "0xAA8AA8B751c3a120cfc6cF498FBd0de9F5528f48"
     const signer = provider.getSigner();
+    const [address, err] = await handle(signer.getAddress());
     const contract = new ethers.Contract(CONTRACT_ADDRESS, GrabbyGrackles.abi, signer);
+    contract.on("Transfer", (_from, _to, tokenID) => {
+        if (_from.toLowerCase() === og_owner_addr) {
+            let id = tokenID - 1; // Convert from id to index
+            this.photos[id]["taken"] = true;
+            this.photos[id]["price"] = "Not available"
+        }
+    });
     for (let id = 0; id < this.photos.length; id++) {
         let [owner, ownErr] = await handle(contract.ownerOf(id + 1))
         if (ownErr) {
@@ -114,6 +142,8 @@ export default {
         this.photos[id]["taken"] = taken
         if (taken) {
             this.photos[id]["price"] = "Not available"
+            if (owner.toLowerCase().localeCompare(signer) == 0)
+                this.photos[id]["price"] = "Owned"
             continue;
         }
 
@@ -124,26 +154,42 @@ export default {
         }
         this.photos[id]["price"] = ethers.utils.formatEther(price) + " MATIC"
     }
-    ethereum.on('chainChanged', (chainId) => {
-      console.log("HI")
-    });
-    contract.on("Transfer", (_from, _to, tokenID) => {
-        if (_from.toLowerCase() === og_owner_addr) {
-            let id = tokenID - 1; // Convert from id to index
-            this.photos[id]["taken"] = true;
-            this.photos[id]["price"] = "Not available"
-        }
-    });
+  },
+  handleAccountsChanged(accounts) {
+      console.log(accounts);
+      if (accounts.length === 0) {
+          this.address = ""
+      }
+      else if (typeof accounts === "string") {
+          this.address = accounts
+      } else {
+          this.address = accounts[0]
+      }
+      if (this.address !== '' && this.noFetch) {
+        this.handleConnect().then().catch((e) => console.log(e))
+      }
+  },
+  async getAccount() {
+      const [accounts, err] = await handle(ethereum.request({ method: 'eth_accounts' }))
+      if (err) {
+          console.log(err)
+      }
+      this.handleAccountsChanged(accounts);
   }
   },
   mounted() {
     if (window.ethereum) {
         this.handleConnect().then().catch((e) => console.log(e))
+        ethereum.on('accountsChanged', this.handleAccountsChanged);
     }
   },
   data() {
     return {
       dialog: [],
+      alertMessage: "",
+      address: "",
+      noFetch: false,
+      alertOn: false,
       // TODO tripple check id's are correct post launch
       photos: [
         { taken: false, price: "...", id: 1, filename: "/collections/grabby/Airpod Grackle.jpg"},

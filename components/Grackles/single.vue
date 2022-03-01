@@ -33,13 +33,13 @@ export default {
     props: {
         id: Number,
         file_name: String,
+        onBuy: Function,
     },
     data() {
       let extension = path.extname(this.file_name);
       let nft_name = path.basename(this.file_name,extension);
       let connected = window.ethereum.isConnected();
       return {
-        owner: "",
         uri: "",
         price: "...",
         nft_name: nft_name,
@@ -51,9 +51,20 @@ export default {
     async fetch() {
         // Not sure when to connect to wallet
         if (this.connected) {
+            await this.setup();
+        }
+    },
+    watch: {
+      connected: async function(val) {
+        console.log(val)
+        if (val) await this.setup();
+      }
+    },
+    methods: {
+        async setup() {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             // TODO make dotenv work with this
-            const CONTRACT_ADDRESS = "0x0903cc60941A6AC0631836E220e0d74917c77ffe";
+            const CONTRACT_ADDRESS =  "0xAA8AA8B751c3a120cfc6cF498FBd0de9F5528f48"
             // const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
             const signer = provider.getSigner();
 
@@ -62,21 +73,21 @@ export default {
             this.price = await contract.getPrice(this.id);
             this.contract = contract;
             this.signer = signer;
-            owner = await contract.ownerOf(this.id);
-            this.buyable = owner
-        }
-    },
-    methods: {
+        },
         async buy() {
           /* await window.ethereum.enable() */
           try {
             await this.contract.buyNFT(await this.signer.getAddress(), this.id, {value: this.price});
-            alert("YOU bought the NFT stuffs");
+            this.onBuy()
           } catch(e) {
             if (e.code === 4001){
               alert("you reject the transaction")
+            } else if (e.code === -32603) {
+              alert(e.data.message)
             }
-            console.log(e.data);
+            console.log("Error ");
+            console.log(e)
+            console.log(e.data)
           }
         }
     }

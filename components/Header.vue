@@ -59,6 +59,19 @@
     <div v-else>
         Connected {{address.slice(0, 5) + "..." + address.slice(-3)}}
     </div>
+<!-- <v-snackbar v-model="alertOn" >
+      {{ alertMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="alertOn = false"
+        >
+            Dismiss
+        </v-btn>
+      </template>
+    </v-snackbar> -->
+
   </v-app-bar>
 </template>
 
@@ -73,13 +86,14 @@ export default {
   data() {
     return {
       address: "",
+      alertOn: false,
+      alertMessage: "",
       collections: [{ title: "Grabby Grackles", url: "grabby-grackles" }]
     };
   },
   mounted() {
-    console.log("yo")
     if (window.ethereum) {
-        this.getAccount().then(() => console.log("got eeem")).catch(e => console.log(e))
+        this.getAccount().then().catch(e => console.log(e))
         ethereum.on('accountsChanged', this.handleAccountsChanged);
     }
   },
@@ -89,17 +103,24 @@ export default {
     },
     handleAccountsChanged(accounts) {
         console.log(accounts);
+        let newAddr = ""
         if (accounts.length === 0) {
-            this.address = ""
-        }
-        else if (typeof accounts === "string") {
-            this.address = accounts
+            newAddr = ""
         } else {
-            this.address = accounts[0]
+            newAddr = accounts;
         }
+        if (typeof newAddr === "object") {
+            newAddr= accounts[0]
+        } 
+
+        if (this.address !== newAddr) {
+            this.alertMessage = "Account Changed " + newAddr.slice(0, 5) + "..." + newAddr.slice(-3) 
+            this.alertOn = true;
+        }
+        this.address = newAddr
     },
     async getAccount() {
-        const [accounts, err] = await ethereum.request({ method: 'eth_accounts' });
+        const [accounts, err] = await handle(ethereum.request({ method: 'eth_accounts' }))
         if (err) {
             console.log(err)
         }
