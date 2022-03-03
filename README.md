@@ -67,3 +67,17 @@ More information about the usage of this directory in [the documentation](https:
 This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+
+### install NEAR
+
+npm install -g near-cli.
+
+If meet 'Missing write access to /usr/local/lib/node_modules' : run "sudo chown -R $USER /usr/local/lib/node_modules"
+
+#### NEAR default testnet is testnet
+
+run "near login" to login
+
+### change to mainnet
+
+export NEAR_ENV=mainnet
