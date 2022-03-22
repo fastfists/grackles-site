@@ -17,7 +17,7 @@
               >Collections</v-tab
             >
           </template>
-          <!-- <v-card>
+          <v-card>
             <v-list>
               <div
                 v-for="collection in collections"
@@ -34,7 +34,7 @@
                 </nuxt-link>
               </div>
             </v-list>
-          </v-card> -->
+          </v-card>
         </v-menu>
       </v-tabs>
     </template>
@@ -88,7 +88,7 @@ export default {
       address: "",
       alertOn: false,
       alertMessage: "",
-      collections: [{ title: "Grabby Grackles", url: "grabby-grackles" }]
+      collections: [{ title: "Grabby Grackles", url: "/grabby-grackles" }]
     };
   },
   mounted() {

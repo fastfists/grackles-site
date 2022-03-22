@@ -41,12 +41,14 @@
              >
              <template v-slot:activator="{on}">
                 <div class="art">
-                    <img
+                    <v-img
+                      class="v-img"
                       style="cursor: pointer;"
                       v-if="!photo.taken"
                       v-on="on"
                       :src="photo.filename" />
-                    <img
+                    <v-img
+                      class="v-img"
                       style="cursor: pointer;"
                       v-else
                       :src="photo.filename" />
@@ -60,7 +62,7 @@
                     <v-btn
                       class="caption"
                       v-else
-                      disabled="true">
+                      disabled>
                         Buy this nft
                       </v-btn>
                       <div>
@@ -69,7 +71,7 @@
                     </div>
                 </div>
              </template>
-             <GracklesSingle :connected="address !== ''" :id="photo.id" :file_name="photo.filename" :onBuy="() => {onPurchase(index); alertOn =true; dialog[index] = false}" />
+             <GracklesSingle :connected="address !== ''" :id="photo.id" :file_name="photo.filename" :onBuy="() => {onPurchase(index); alertOn = true; dialog[index] = false}" />
           </v-dialog>
 
       </div>
@@ -80,6 +82,9 @@
           </v-progress-circular>
           {{ alertMessage }}
           <template v-slot:action="{ attrs }">
+            <v-img
+              style="cursor: pointer;"
+              :src="photos[0].filename" />
             <v-btn
               text
               v-bind="attrs"
@@ -108,9 +113,6 @@ const handle = (promise) => {
     .catch(error => Promise.resolve([undefined, error]));
 }
 
-
-
-
 export default {
   methods: {
   onPurchase(index) {
@@ -119,7 +121,6 @@ export default {
   },
   async handleConnect() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    this.connected = true
     // TODO update on change
     const CONTRACT_ADDRESS = "0xAA8AA8B751c3a120cfc6cF498FBd0de9F5528f48"
     const signer = provider.getSigner();
@@ -135,7 +136,10 @@ export default {
     for (let id = 0; id < this.photos.length; id++) {
         let [owner, ownErr] = await handle(contract.ownerOf(id + 1))
         if (ownErr) {
-            console.log(ownErr.data);
+            if (ownErr.data)
+                console.log(ownErr.data);
+            else 
+                console.log(ownErr);
             continue;
         }
         let taken = og_owner_addr.localeCompare(owner.toLowerCase()) != 0;
@@ -192,46 +196,46 @@ export default {
       alertOn: false,
       // TODO tripple check id's are correct post launch
       photos: [
-        { taken: false, price: "...", id: 1, filename: "/collections/grabby/Airpod Grackle.jpg"},
-        { taken: false, price: "...", id: 2, filename: "/collections/grabby/Angry hippie Grackle.jpg"},
-        { taken: false, price: "...", id: 3, filename: "/collections/grabby/Art critic Grackle.jpg"},
-        { taken: false, price: "...", id: 4, filename: "/collections/grabby/Artsy Grackle.jpg"},
-        { taken: false, price: "...", id: 5, filename: "/collections/grabby/Banksy Grackle.jpg"},
-        { taken: false, price: "...", id: 6, filename: "/collections/grabby/Blue origin grackle.jpg"},
-        { taken: false, price: "...", id: 7, filename: "/collections/grabby/British Judge.jpg"},
-        { taken: false, price: "...", id: 8, filename: "/collections/grabby/Cryptopunk Grackle.jpg"},
-        { taken: false, price: "...", id: 9, filename: "/collections/grabby/Drunk artist grackle.jpg"},
-        { taken: false, price: "...", id: 10, filename: "/collections/grabby/Duty free Grackle.jpg"},
-        { taken: false, price: "...", id: 11, filename: "/collections/grabby/Evening Grackle.jpg"},
-        { taken: false, price: "...", id: 12, filename: "/collections/grabby/German Grackle.jpg"},
-        { taken: false, price: "...", id: 13, filename: "/collections/grabby/Green hat.jpg"},
-        { taken: false, price: "...", id: 14, filename: "/collections/grabby/Habanero Grackle.jpg"},
-        { taken: false, price: "...", id: 15, filename: "/collections/grabby/Hairdresser bird.jpg"},
-        { taken: false, price: "...", id: 16, filename: "/collections/grabby/Invisible Grackle.jpg"},
-        { taken: false, price: "...", id: 17, filename: "/collections/grabby/Joe Grackle.jpg"},
-        { taken: false, price: "...", id: 18, filename: "/collections/grabby/Longhorns Grackle.jpg"},
-        { taken: false, price: "...", id: 19, filename: "/collections/grabby/modern grackle.jpg"},
-        { taken: false, price: "...", id: 20, filename: "/collections/grabby/Oktoberfest Grackle.jpg"},
-        { taken: false, price: "...", id: 21, filename: "/collections/grabby/Peacock Grackle.jpg"},
-        { taken: false, price: "...", id: 22, filename: "/collections/grabby/Questioning Grackle.jpg"},
-        { taken: false, price: "...", id: 23, filename: "/collections/grabby/Secret Service Grackle.jpg"},
-        { taken: false, price: "...", id: 24, filename: "/collections/grabby/Shaky Crypto Grackle.jpg"},
-        { taken: false, price: "...", id: 25, filename: "/collections/grabby/Sheriff Grackle.jpg"},
-        { taken: false, price: "...", id: 26, filename: "/collections/grabby/Sherlock Grackle.jpg"},
-        { taken: false, price: "...", id: 27, filename: "/collections/grabby/Singing Grackle.jpg"},
-        { taken: false, price: "...", id: 28, filename: "/collections/grabby/Tax free Grackle.jpg"},
-        { taken: false, price: "...", id: 29, filename: "/collections/grabby/The cat.jpg"},
-        { taken: false, price: "...", id: 30, filename: "/collections/grabby/The pirate.jpg"},
-        { taken: false, price: "...", id: 31, filename: "/collections/grabby/The puppy Grackle.jpg"},
-        { taken: false, price: "...", id: 32, filename: "/collections/grabby/The rebel Grackle.jpg"},
-        { taken: false, price: "...", id: 33, filename: "/collections/grabby/The sneeze Grackle.jpg"},
-        { taken: false, price: "...", id: 34, filename: "/collections/grabby/Too many drinks Grackle.jpg"},
-        { taken: false, price: "...", id: 35, filename: "/collections/grabby/Torchy Grackle.jpg"},
-        { taken: false, price: "...", id: 36, filename: "/collections/grabby/Turks cap.jpg"},
-        { taken: false, price: "...", id: 37, filename: "/collections/grabby/Twitter Grackle.jpg"},
-        { taken: false, price: "...", id: 38, filename: "/collections/grabby/Ukrainian Grackle.jpg"},
-        { taken: false, price: "...", id: 39, filename: "/collections/grabby/Viking Grackle.jpg"},
-        { taken: false, price: "...", id: 40, filename: "/collections/grabby/VR Grackle.jpg"},
+        { taken: false, price: "...", id: 1, filename: "/collections/grabby-thumbnail/Airpod Grackle.jpg"},
+        { taken: false, price: "...", id: 2, filename: "/collections/grabby-thumbnail/Angry hippie Grackle.jpg"},
+        { taken: false, price: "...", id: 3, filename: "/collections/grabby-thumbnail/Art critic Grackle.jpg"},
+        { taken: false, price: "...", id: 4, filename: "/collections/grabby-thumbnail/Artsy Grackle.jpg"},
+        { taken: false, price: "...", id: 5, filename: "/collections/grabby-thumbnail/Banksy Grackle.jpg"},
+        { taken: false, price: "...", id: 6, filename: "/collections/grabby-thumbnail/Blue origin grackle.jpg"},
+        { taken: false, price: "...", id: 7, filename: "/collections/grabby-thumbnail/British Judge.jpg"},
+        { taken: false, price: "...", id: 8, filename: "/collections/grabby-thumbnail/Cryptopunk Grackle.jpg"},
+        { taken: false, price: "...", id: 9, filename: "/collections/grabby-thumbnail/Drunk artist grackle.jpg"},
+        { taken: false, price: "...", id: 10, filename: "/collections/grabby-thumbnail/Duty free Grackle.jpg"},
+        { taken: false, price: "...", id: 11, filename: "/collections/grabby-thumbnail/Evening Grackle.jpg"},
+        { taken: false, price: "...", id: 12, filename: "/collections/grabby-thumbnail/German Grackle.jpg"},
+        { taken: false, price: "...", id: 13, filename: "/collections/grabby-thumbnail/Green hat.jpg"},
+        { taken: false, price: "...", id: 14, filename: "/collections/grabby-thumbnail/Habanero Grackle.jpg"},
+        { taken: false, price: "...", id: 15, filename: "/collections/grabby-thumbnail/Hairdresser bird.jpg"},
+        { taken: false, price: "...", id: 16, filename: "/collections/grabby-thumbnail/Invisible Grackle.jpg"},
+        { taken: false, price: "...", id: 17, filename: "/collections/grabby-thumbnail/Joe Grackle.jpg"},
+        { taken: false, price: "...", id: 18, filename: "/collections/grabby-thumbnail/Longhorns Grackle.jpg"},
+        { taken: false, price: "...", id: 19, filename: "/collections/grabby-thumbnail/modern grackle.jpg"},
+        { taken: false, price: "...", id: 20, filename: "/collections/grabby-thumbnail/Oktoberfest Grackle.jpg"},
+        { taken: false, price: "...", id: 21, filename: "/collections/grabby-thumbnail/Peacock Grackle.jpg"},
+        { taken: false, price: "...", id: 22, filename: "/collections/grabby-thumbnail/Questioning Grackle.jpg"},
+        { taken: false, price: "...", id: 23, filename: "/collections/grabby-thumbnail/Secret Service Grackle.jpg"},
+        { taken: false, price: "...", id: 24, filename: "/collections/grabby-thumbnail/Shaky Crypto Grackle.jpg"},
+        { taken: false, price: "...", id: 25, filename: "/collections/grabby-thumbnail/Sheriff Grackle.jpg"},
+        { taken: false, price: "...", id: 26, filename: "/collections/grabby-thumbnail/Sherlock Grackle.jpg"},
+        { taken: false, price: "...", id: 27, filename: "/collections/grabby-thumbnail/Singing Grackle.jpg"},
+        { taken: false, price: "...", id: 28, filename: "/collections/grabby-thumbnail/Tax free Grackle.jpg"},
+        { taken: false, price: "...", id: 29, filename: "/collections/grabby-thumbnail/The cat.jpg"},
+        { taken: false, price: "...", id: 30, filename: "/collections/grabby-thumbnail/The pirate.jpg"},
+        { taken: false, price: "...", id: 31, filename: "/collections/grabby-thumbnail/The puppy Grackle.jpg"},
+        { taken: false, price: "...", id: 32, filename: "/collections/grabby-thumbnail/The rebel Grackle.jpg"},
+        { taken: false, price: "...", id: 33, filename: "/collections/grabby-thumbnail/The sneeze Grackle.jpg"},
+        { taken: false, price: "...", id: 34, filename: "/collections/grabby-thumbnail/Too many drinks Grackle.jpg"},
+        { taken: false, price: "...", id: 35, filename: "/collections/grabby-thumbnail/Torchy Grackle.jpg"},
+        { taken: false, price: "...", id: 36, filename: "/collections/grabby-thumbnail/Turks cap.jpg"},
+        { taken: false, price: "...", id: 37, filename: "/collections/grabby-thumbnail/Twitter Grackle.jpg"},
+        { taken: false, price: "...", id: 38, filename: "/collections/grabby-thumbnail/Ukrainian Grackle.jpg"},
+        { taken: false, price: "...", id: 39, filename: "/collections/grabby-thumbnail/Viking Grackle.jpg"},
+        { taken: false, price: "...", id: 40, filename: "/collections/grabby-thumbnail/VR Grackle.jpg"},
       ]
     };
   }
@@ -248,7 +252,7 @@ export default {
   padding: 0 5rem;
 }
 
-.gallery-panel .art img {
+.gallery-panel .art .v-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
