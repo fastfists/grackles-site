@@ -1,4 +1,4 @@
-<template>
+2<template>
   <v-card>
     <v-toolbar dark color="primary">
       <v-btn icon dark @click="dialog[index] = false">
@@ -82,44 +82,39 @@ export default {
       if (val) await this.setup()
     },
   },
-  methods: {
-    async setup() {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      // TODO make dotenv work with this
-      const CONTRACT_ADDRESS = '0xAA8AA8B751c3a120cfc6cF498FBd0de9F5528f48'
-      // const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
-      const signer = provider.getSigner()
+    methods: {
+        async setup() {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // TODO make dotenv work with this
+            const CONTRACT_ADDRESS = "0x4221Dc42D8AcB2a46b837F3F683593c4FF71f3E5"
+            // const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
+            const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        GrabbyGrackles.abi,
-        signer,
-      )
-      /* this.uri = await contract.tokenURI(this.id); */
-      this.price = await contract.getPrice(this.id)
-      this.contract = contract
-      this.signer = signer
-    },
-    async buy() {
-      /* await window.ethereum.enable() */
-      try {
-        await this.contract.buyNFT(await this.signer.getAddress(), this.id, {
-          value: this.price,
-        })
-        this.onBuy()
-      } catch (e) {
-        if (e.code === 4001) {
-          alert('you reject the transaction')
-        } else if (e.code === -32603) {
-          alert(e.data.message)
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, GrabbyGrackles.abi, signer);
+            /* this.uri = await contract.tokenURI(this.id); */
+            this.price = await contract.getPrice(this.id);
+            this.contract = contract;
+            this.signer = signer;
+        },
+        async buy() {
+          /* await window.ethereum.enable() */
+          try {
+            await this.contract.buyNFT(await this.signer.getAddress(), this.id, {value: this.price});
+            console.log("ID " + await this.signer.getAddress() + " bought id " + this.id);
+            this.onBuy()
+          } catch(e) {
+            if (e.code === 4001){
+              alert("you reject the transaction")
+            } else if (e.code === -32603) {
+              alert(e.data.message)
+            }
+            console.log("Error ");
+            console.log(e)
+            console.log(e.data)
+          }
         }
-        console.log('Error ')
-        console.log(e)
-        console.log(e.data)
-      }
-    },
-  },
-}
+    }
+};
 </script>
 
 <style >

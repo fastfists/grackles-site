@@ -14,6 +14,7 @@ contract GrabbyGrackles is ERC721, Ownable {
   // mapping saves the NFT prices set by tokenId in wei
   mapping (uint256 => uint256) private prices;
 
+
   
   constructor() ERC721("GrabbyGrackles", "GGNFT") {}
 
@@ -60,7 +61,26 @@ contract GrabbyGrackles is ERC721, Ownable {
     return prices[tokenId];
   }
 
+  function getPrices() public view returns(uint256[] memory) {
+    uint n = _tokenIds.current();
+    uint256[] memory cost = new uint256[](n);
+    for (uint i = 0; i < n; i++) {
+      cost[i] = prices[i + 1];
+    }
+    return cost;
+  }
+
+  function getOwners() public view returns(address[] memory) {
+    uint n = _tokenIds.current();
+    address[] memory owners = new address[](n);
+    for (uint i = 0; i < n; i++) {
+      owners[i] = ownerOf(i + 1);
+    }
+    return owners;
+  }
+
   function buyNFT(address recipient, uint256 tokenId) public payable {
+    require(recipient != address(0), "Recipient can't be null");
     require(ownerOf(tokenId) != recipient, "You already own this NFT");
     require(msg.value >= prices[tokenId], "Insufficient balance");
 

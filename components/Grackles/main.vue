@@ -82,9 +82,6 @@
           </v-progress-circular>
           {{ alertMessage }}
           <template v-slot:action="{ attrs }">
-            <v-img
-              style="cursor: pointer;"
-              :src="photos[0].filename" />
             <v-btn
               text
               v-bind="attrs"
@@ -122,41 +119,39 @@ export default {
   async handleConnect() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     // TODO update on change
-    const CONTRACT_ADDRESS = "0xAA8AA8B751c3a120cfc6cF498FBd0de9F5528f48"
+    const CONTRACT_ADDRESS = "0x4221Dc42D8AcB2a46b837F3F683593c4FF71f3E5"
+
     const signer = provider.getSigner();
-    const [address, err] = await handle(signer.getAddress());
+    const [address, _] = await handle(signer.getAddress());
     const contract = new ethers.Contract(CONTRACT_ADDRESS, GrabbyGrackles.abi, signer);
-    contract.on("Transfer", (_from, _to, tokenID) => {
+    contract.on("Transfer", (_from, _to, id) => {
+        console.log("GOt a transfer!!", _from, _to, id);
         if (_from.toLowerCase() === og_owner_addr) {
-            let id = tokenID - 1; // Convert from id to index
-            this.photos[id]["taken"] = true;
-            this.photos[id]["price"] = "Not available"
+            this.photos[id-1]["taken"] = true;
+            this.photos[id-1]["price"] = "Not available"
+            if (owners[id].localeCompare(address) == 0)
+                this.photos[id]["price"] = "Owned"
         }
     });
+    let [owners, ownErr] = await handle(contract.getOwners());
+    if (ownErr)
+        console.log(ownErr);
+    console.log(owners);
+    let [prices, priceErr] = await handle(contract.getPrices());
+    if (priceErr)
+        console.log(priceErr);
+
     for (let id = 0; id < this.photos.length; id++) {
-        let [owner, ownErr] = await handle(contract.ownerOf(id + 1))
-        if (ownErr) {
-            if (ownErr.data)
-                console.log(ownErr.data);
-            else 
-                console.log(ownErr);
-            continue;
-        }
-        let taken = og_owner_addr.localeCompare(owner.toLowerCase()) != 0;
+        let taken = og_owner_addr.localeCompare(owners[id].toLowerCase()) != 0;
         this.photos[id]["taken"] = taken
         if (taken) {
+            console.log("Taken " + (id + 1));
             this.photos[id]["price"] = "Not available"
-            if (owner.toLowerCase().localeCompare(signer) == 0)
+            if (owners[id].localeCompare(address) == 0)
                 this.photos[id]["price"] = "Owned"
             continue;
         }
-
-        let [price, priceErr] = await handle(contract.getPrice(id +1))
-        if (priceErr) {
-            conosle.log(priceErr.data);
-            continue;
-        }
-        this.photos[id]["price"] = ethers.utils.formatEther(price) + " MATIC"
+        this.photos[id]["price"] = ethers.utils.formatEther(prices[id]) + " MATIC"
     }
   },
   handleAccountsChanged(accounts) {
@@ -169,7 +164,7 @@ export default {
       } else {
           this.address = accounts[0]
       }
-      if (this.address !== '' && this.noFetch) {
+      if (this.address !== '') {
         this.handleConnect().then().catch((e) => console.log(e))
       }
   },
@@ -183,8 +178,8 @@ export default {
   },
   mounted() {
     if (window.ethereum) {
-        this.handleConnect().then().catch((e) => console.log(e))
         ethereum.on('accountsChanged', this.handleAccountsChanged);
+        this.handleConnect().then().catch((e) => console.log(e))
     }
   },
   data() {
@@ -192,7 +187,6 @@ export default {
       dialog: [],
       alertMessage: "",
       address: "",
-      noFetch: false,
       alertOn: false,
       // TODO tripple check id's are correct post launch
       photos: [

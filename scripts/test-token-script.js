@@ -5,14 +5,8 @@ async function main() {
     const NFT = await hre.ethers.getContractFactory("GrabbyGrackles");
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS
     const contract = NFT.attach(CONTRACT_ADDRESS);
-    for (let i = 1; i <= 40; i++) {
-        // const owner = await contract.ownerOf(i);
-        // console.log("Owner:", owner);
-        // const balance = await contract.getPrice(i);
-        // console.log("Balance: ", balance);
-        const uri = await contract.tokenURI(i);
-        console.log("URI: ", uri);
-    }
+    console.log(await contract.getPrices());
+    console.log(await contract.getOwners());
 }
 
 main().then(() => process.exit(0)).catch(error => {
