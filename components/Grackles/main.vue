@@ -37,7 +37,7 @@
 
         <v-dialog
              v-model="dialog[index]"
-             width="300"
+             fullscreen
              >
              <template v-slot:activator="{on}">
                 <div class="art">
